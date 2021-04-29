@@ -2,6 +2,7 @@ package com.github.seeker.inventorymanager
 
 import android.os.Bundle
 import android.view.Menu
+import androidx.activity.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
@@ -13,9 +14,12 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import androidx.room.Room
 import com.github.seeker.inventorymanager.persistence.InventoryDatabase
 import dagger.hilt.android.HiltAndroidApp
+import com.github.seeker.inventorymanager.persistence.entity.Item
+import com.github.seeker.inventorymanager.ui.model.ItemViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -23,7 +27,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-
+    private val model: ItemViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -32,9 +36,12 @@ class MainActivity : AppCompatActivity() {
 
         val db = Room.databaseBuilder(applicationContext, InventoryDatabase::class.java, "inventory-database").build()
         val itemDao = db.itemDao()
-        GlobalScope.launch {
-            val items = itemDao.getAllItems() // TODO use livedata to display items
+
+        val itemObserver = Observer<List<Item>> {
+            newItem -> print("testing!")
         }
+
+        model.items.observe(this, itemObserver)
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
