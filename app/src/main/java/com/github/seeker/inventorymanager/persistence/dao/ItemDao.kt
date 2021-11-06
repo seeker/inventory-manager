@@ -1,5 +1,6 @@
 package com.github.seeker.inventorymanager.persistence.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -9,7 +10,7 @@ import com.github.seeker.inventorymanager.persistence.entity.Item
 @Dao
 interface ItemDao {
     @Query("SELECT * FROM item")
-    fun getAllItems(): Array<Item>
+    fun getAllItems(): LiveData<List<Item>>
 
     @Insert
     fun addItem(item: Item)

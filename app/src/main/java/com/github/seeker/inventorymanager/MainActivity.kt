@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.room.Room
 import com.github.seeker.inventorymanager.persistence.InventoryDatabase
+import com.github.seeker.inventorymanager.persistence.entity.Item
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -32,8 +33,9 @@ class MainActivity : AppCompatActivity() {
 
         val db = Room.databaseBuilder(applicationContext, InventoryDatabase::class.java, "inventory-database").build()
         val itemDao = db.itemDao()
+
         GlobalScope.launch {
-            val items = itemDao.getAllItems() // TODO use livedata to display items
+            itemDao.addItem(Item(1, "foobar", 1))
         }
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
